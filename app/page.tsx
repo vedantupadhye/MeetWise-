@@ -1,113 +1,179 @@
+"use client"
+
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import Image from 'next/image'
+import { motion, useAnimation } from 'framer-motion'
+import { useInView } from 'react-intersection-observer'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { CheckCircle2, Zap, ArrowRight } from 'lucide-react'
 
 export default function Home() {
+  const [hoveredFeature, setHoveredFeature] = useState<number | null>(null)
+  const controls = useAnimation()
+  const [ref, inView] = useInView()
+
+  useEffect(() => {
+    if (inView) {
+      controls.start('visible')
+    }
+  }, [controls, inView])
+
+  const features = [
+    { title: 'Speech to Text', description: 'Automatically transcribe your meeting recordings', icon: Zap },
+    { title: 'Smart Summarization', description: 'Get concise summaries of your meetings', icon: Zap },
+    { title: 'Action Item Extraction', description: 'Never miss a task or follow-up item', icon: Zap },
+    { title: 'Key Points Identification', description: 'Highlight the most important discussion points', icon: Zap },
+    { title: 'Sentiment Analysis', description: 'Understand the overall tone of your meetings', icon: Zap },
+    { title: 'Export Options', description: 'Download your minutes in Word or PDF format', icon: Zap },
+  ]
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <div className="container mx-auto px-4 py-12">
+      <motion.section 
+        className="text-center mb-16"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <h1 className="text-4xl font-bold mb-4">Transform Your Meetings with AI-Powered Minutes</h1>
+        <p className="text-xl mb-8">Generate comprehensive, accurate meeting minutes in seconds</p>
+        <Button asChild size="lg">
+          <Link href="/dashboard">Get Started <ArrowRight className="ml-2 h-4 w-4" /></Link>
+        </Button>
+      </motion.section>
+
+      <motion.section 
+        className="mb-16 relative"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
+        <div className="relative h-64 md:h-96 rounded-xl overflow-hidden">
+          <Image
+            src="/placeholder.svg?height=400&width=800"
+            alt="AI-powered meeting analysis"
+            layout="fill"
+            objectFit="cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/50 to-transparent flex items-center">
+            <div className="p-8">
+              <h2 className="text-3xl font-bold text-white mb-4">AI-Powered Insights</h2>
+              <p className="text-white text-lg mb-4">Unlock the power of your meetings with our advanced AI technology</p>
+              <Button variant="secondary">Learn More</Button>
+            </div>
+          </div>
         </div>
-      </div>
+      </motion.section>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+      <section className="mb-16">
+        <h2 className="text-3xl font-bold text-center mb-8">Key Features</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {features.map((feature, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <Card 
+                className="h-full transition-all duration-300 hover:shadow-lg"
+                onMouseEnter={() => setHoveredFeature(index)}
+                onMouseLeave={() => setHoveredFeature(null)}
+              >
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <feature.icon className={`w-6 h-6 mr-2 ${hoveredFeature === index ? 'text-primary' : ''}`} />
+                    {feature.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription>{feature.description}</CardDescription>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      </section>
 
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+      <motion.section 
+        ref={ref}
+        animate={controls}
+        initial="hidden"
+        variants={{
+          visible: { opacity: 1, y: 0 },
+          hidden: { opacity: 0, y: 50 }
+        }}
+        transition={{ duration: 0.5 }}
+        className="mb-16"
+      >
+        <div className="bg-muted rounded-xl p-8 md:p-16 flex flex-col md:flex-row items-center">
+          <div className="md:w-1/2 mb-8 md:mb-0">
+            <h2 className="text-3xl font-bold mb-4">Experience the Future of Meeting Management</h2>
+            <p className="text-lg mb-4">Our AI-powered platform revolutionizes how you handle meeting minutes, action items, and follow-ups.</p>
+            <Button asChild>
+              <Link href="/features">Explore All Features</Link>
+            </Button>
+          </div>
+          <div className="md:w-1/2 relative h-64 md:h-96">
+            <Image
+              src="/placeholder.svg?height=400&width=600"
+              alt="MOM Generator AI in action"
+              layout="fill"
+              objectFit="cover"
+              className="rounded-xl"
+            />
+          </div>
+        </div>
+      </motion.section>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+      {/* <motion.section 
+        className="text-center mb-16"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.6 }}
+      > */}
+        {/* <h2 className="text-3xl font-bold mb-8">Pricing Plans</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {[
+            { name: 'Basic', price: '$9.99', features: ['Up to 5 meetings/month', 'Basic summarization', 'Export to PDF'] },
+            { name: 'Pro', price: '$19.99', features: ['Unlimited meetings', 'Advanced summarization', 'Export to PDF and Word', 'Action item extraction'] },
+            { name: 'Enterprise', price: 'Custom', features: ['All Pro features', 'Custom integrations', 'Dedicated support', 'On-premise deployment option'] },
+          ].map((plan, index) => (
+            <Card key={index} className={`transition-all duration-300 hover:shadow-lg ${index === 1 ? 'border-primary' : ''}`}>
+              <CardHeader>
+                <CardTitle>{plan.name}</CardTitle>
+                <CardDescription className="text-2xl font-bold">{plan.price}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2">
+                  {plan.features.map((feature, featureIndex) => (
+                    <li key={featureIndex} className="flex items-center">
+                      <CheckCircle2 className="w-5 h-5 mr-2 text-green-500" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Button className="w-full mt-4">Choose Plan</Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </motion.section> */}
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+      <motion.section 
+        className="text-center"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.8 }}
+      >
+        <h2 className="text-3xl font-bold mb-8">Ready to Revolutionize Your Meetings?</h2>
+        <Button asChild size="lg">
+          <Link href="/dashboard">Get Started Now <ArrowRight className="ml-2 h-4 w-4" /></Link>
+        </Button>
+      </motion.section>
+    </div>
   )
 }
+
