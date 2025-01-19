@@ -19,7 +19,7 @@ export default function Dashboard() {
 
   return (
     
-    <div className="container mx-auto px-4 py-12">
+    <div className="container bg-gray-400 mx-auto px-4 py-12">
          
       <motion.h1 
         className="text-3xl font-bold mb-8"
