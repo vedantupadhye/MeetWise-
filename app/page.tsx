@@ -37,6 +37,7 @@ export default function Home() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
+        <div className='bg-red-400'>This app is in development</div>
         <h1 className="text-4xl font-bold mb-4">Transform Your Meetings with AI-Powered Minutes</h1>
         <p className="text-xl mb-8">Generate comprehensive, accurate meeting minutes in seconds</p>
         <Button asChild size="lg">
